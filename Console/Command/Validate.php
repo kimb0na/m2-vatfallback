@@ -11,6 +11,7 @@ namespace Dutchento\Vatfallback\Console\Command;
 
 use Dutchento\Vatfallback\Service\Exceptions\NoValidationException;
 use Dutchento\Vatfallback\Service\ValidateVatInterface;
+use Magento\Framework\Console\Cli;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,11 +53,14 @@ class Validate extends Command
 
             if ($result['result']) {
                 $output->writeln("Success is: {$result['result']}, with service {$result['service']}");
+                return Cli::RETURN_SUCCESS;
             } else {
                 $output->writeln("Invalid VAT number, with service {$result['service']}");
+                return Cli::RETURN_FAILURE;
             }
         } catch (NoValidationException $exception) {
             $output->writeln("No validation took place");
+            return Cli::RETURN_FAILURE;
         }
     }
 
